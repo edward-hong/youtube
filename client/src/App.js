@@ -42,7 +42,6 @@ const App = () => {
       </InputGroup>
       <Row>
         {results.map((video) => {
-          console.log(video)
           return (
             <Col
               style={{ overflow: 'hidden' }}
