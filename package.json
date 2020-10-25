@@ -1,0 +1,30 @@
+{
+  "name": "youtube",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server/index",
+    "server": "nodemon server/index"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/edward-hong/youtube.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/edward-hong/youtube/issues"
+  },
+  "homepage": "https://github.com/edward-hong/youtube#readme",
+  "dependencies": {
+    "axios": "^0.21.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "concurrently": "^5.3.0",
+    "nodemon": "^2.0.6"
+  }
+}
