@@ -10,6 +10,7 @@ import {
   Row,
   Col,
   Modal,
+  ButtonGroup,
 } from 'reactstrap'
 
 const App = () => {
@@ -17,18 +18,32 @@ const App = () => {
   const [results, setResults] = useState([])
   const [modal, setModal] = useState(false)
   const [selectedVideoId, setSelectedVideoId] = useState('')
+  const [nextPageToken, setNextPageToken] = useState('')
+  const [prevPageToken, setPrevPageToken] = useState('')
 
   const toggle = () => setModal(!modal)
 
   const handleSearch = () => {
-    axios
-      .get(`/api/search?query=${query}&num=12`)
-      .then(({ data }) => setResults(data.items))
+    axios.get(`/api/search?query=${query}&num=12`).then(({ data }) => {
+      setResults(data.items)
+      setNextPageToken(data.nextPageToken)
+      setPrevPageToken(data.prevPageToken)
+    })
   }
 
   const handleSelectVideo = (id) => () => {
     setSelectedVideoId(id)
     toggle()
+  }
+
+  const handlePagination = (pageToken) => () => {
+    axios
+      .get(`/api/search?query=${query}&num=12&pageToken=${pageToken}`)
+      .then(({ data }) => {
+        setResults(data.items)
+        setNextPageToken(data.nextPageToken)
+        setPrevPageToken(data.prevPageToken)
+      })
   }
 
   return (
@@ -63,6 +78,14 @@ const App = () => {
           )
         })}
       </Row>
+      {results.length > 0 && (
+        <ButtonGroup>
+          <Button onClick={handlePagination(prevPageToken)}>
+            Previous Page
+          </Button>
+          <Button onClick={handlePagination(nextPageToken)}>Next Page</Button>
+        </ButtonGroup>
+      )}
       <Modal isOpen={modal} toggle={toggle}>
         <YouTube videoId={selectedVideoId} />
       </Modal>
