@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import YouTube from 'react-youtube'
 import axios from 'axios'
 import {
   Container,
@@ -8,16 +9,26 @@ import {
   Button,
   Row,
   Col,
+  Modal,
 } from 'reactstrap'
 
 const App = () => {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState([])
+  const [modal, setModal] = useState(false)
+  const [selectedVideoId, setSelectedVideoId] = useState('')
+
+  const toggle = () => setModal(!modal)
 
   const handleSearch = () => {
     axios
       .get(`/api/search?query=${query}&num=12`)
       .then(({ data }) => setResults(data.items))
+  }
+
+  const handleSelectVideo = (id) => () => {
+    setSelectedVideoId(id)
+    toggle()
   }
 
   return (
@@ -33,7 +44,14 @@ const App = () => {
         {results.map((video) => {
           console.log(video)
           return (
-            <Col xs={6} sm={4} md={3} key={video.id.videoId}>
+            <Col
+              style={{ overflow: 'hidden' }}
+              xs={6}
+              sm={4}
+              md={3}
+              key={video.id.videoId}
+              onClick={handleSelectVideo(video.id.videoId)}
+            >
               <img
                 src={video.snippet.thumbnails.default.url}
                 alt={video.snippet.title}
@@ -46,6 +64,9 @@ const App = () => {
           )
         })}
       </Row>
+      <Modal isOpen={modal} toggle={toggle}>
+        <YouTube videoId={selectedVideoId} />
+      </Modal>
     </Container>
   )
 }
